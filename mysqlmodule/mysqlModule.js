@@ -12,6 +12,7 @@ var connection = exports.connection = mysql.createConnection({
 // Login Insert Accounts
 // Checkt, ob User schon in der Datenbank, falls nicht, dann wird der neue User hinzugefügt
 //Shakil was here :)
+//This is a Test to seee how merging in GitHub works :D
 exports.loginCheck = function (sEmail,sVname,sNname,sKlasse,callback) {
     connection.query('insert into schueler select * From (select "'+sEmail+'","'+sVname+'","'+sNname+'","'+sKlasse+'","0") as daten where not EXISTS ( Select sEmail from schueler where sEmail="'+sEmail+'") limit 1 ', function(err,rows,fields){
         if(err) throw err;
