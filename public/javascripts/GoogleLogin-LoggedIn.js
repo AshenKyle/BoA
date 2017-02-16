@@ -120,6 +120,7 @@ var helper = (function() {
                         }
                     }
                     // TEST 123
+                        // Ein weiterer Test
                     else typee = 'Professor';
                     console.log(typee);
                     if(document.getElementById('formCheck')) {
