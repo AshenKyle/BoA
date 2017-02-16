@@ -21,6 +21,7 @@ exports.loginCheck = function (sEmail,sVname,sNname,sKlasse,callback) {
 };
 
 //Unsicher Injection
+// Test
 
 exports.erstelleKursLehrer = function(email,kBez,kBeschr,minL,maxL,minS,maxS,Tag,ZAnf,ZEnd,callback) {
     connection.query('Call erstelleKurs('+id+',"'+kBez+'",'+kBeschr+'",'+minL+','+MmxL+','+minS+','+maxS+',"'+Tag+'","'+ZAnf+'","'+ZEnd+'")', function(err,rows,fields){
