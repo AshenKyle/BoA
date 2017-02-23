@@ -78,7 +78,7 @@ exports.selectKurseSchueler = function(email,callback) {
 };
 
 exports.fullReset = function(callback){
-  connection.query('call fullReset',function(err, rows, fields){
+  connection.query('call fullReset()',function(err, rows, fields){
       if (err) throw err;
 
       return callback();
@@ -118,7 +118,7 @@ exports.setWoche = function (startDatum, endDatum, callback){
 };
 
 exports.selectProjektWoche = function (callback){
-    connection.query('call selectWocheVonBis', function (err, rows, fields) {
+    connection.query('call selectWocheVonBis()', function (err, rows, fields) {
         if(err) throw err;
 
         return callback(rows);
