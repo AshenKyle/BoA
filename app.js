@@ -7,12 +7,6 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var check = require('./routes/check');
-var sh = require('./routes/s_home');
-var sd = require('./routes/s_detail');
-var lh = require('./routes/l_home');
-var la = require('./routes/l_add');
-var adminpage = require('./routes/admin');
-var adminadd = require('./routes/admin_add');
 
 var app = express();
 
@@ -29,14 +23,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/schueler', sh);
-app.use('/lehrer', lh);
-app.use('/lehrer-kurserstellen', la);
-app.use('/lehrer-kurserstellen', la);
-app.use('/skurs', sd);
 app.use('/check', check);
-app.use('/admin', adminpage);
-app.use('/admin-kurserstellen', adminadd);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
