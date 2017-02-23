@@ -1,3 +1,30 @@
 ROUTES
 
-Hallo
+index.js
+GET / index.ejs
+
+check.js
+GET / check.ejs
+
+
+schueler.js
+GET /:schueler_id s_home.ejs     //Alle Kurse anzeigen + eigene Kurse anzeigen
+GET /detail/:kurs_id s_detail.ejs//Kurs Detailansicht
+POST /:id s_home.ejs             //Für Kurs eintragen
+DELTE /:id s_home.ejs            //Von Kurs austragen
+
+lehrer.js
+GET /:lehrer_id l_home.ejs       //Alle Kurse anzeigen + eigene Kurse anzeigen
+GET /detail/:id l_detail.ejs     //Kurse Detailansicht
+POST /:id l_home.ejs             //Für Kurs eintragen
+POST / l_home.ejs                //Kurs erstellen
+DELETE /:id l_home.ejs           //Von Kurs austragen
+PUT /:id l_home.ejs              //Kurs Soft-Deleten
+PUT /bearbeiten/:id              //Kurs Bearbeiten
+
+admin.js
+GET / admin.ejs                  //Wochentage bekommt
+POST /woche admin.ejs            //Wochentage festlegen
+POST / admin.ejs                 //Absolvierende Halbtage festlegen
+DELETE / admin.ejs               //Auf Werkeinstellungen zurücksetzen
+
