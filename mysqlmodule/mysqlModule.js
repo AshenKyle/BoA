@@ -14,7 +14,7 @@ var connection = exports.connection = mysql.createConnection({
 //Shakil was here :)
 //This is a Test to seee how merging in GitHub works :D
 exports.loginCheck = function (sEmail,sVname,sNname,sKlasse,callback) {
-    connection.query('insert into schueler select * From (select "'+sEmail+'","'+sVname+'","'+sNname+'","'+sKlasse+'","0") as daten where not EXISTS ( Select sEmail from schueler where sEmail="'+sEmail+'") limit 1 ', function(err,rows,fields){
+    connection.query('insert into schueler select * From (select "?","?","?","?","0") as daten where not EXISTS ( Select sEmail from schueler where sEmail="?") limit 1 ',sEmail,sVname,sNname,sKlasse,sEmail, function(err,rows,fields){
         if(err) throw err;
 
         return callback(rows,err);
@@ -24,7 +24,7 @@ exports.loginCheck = function (sEmail,sVname,sNname,sKlasse,callback) {
 //Unsicher Injection
 
 exports.erstelleKursLehrer = function(email,kBez,kBeschr,minL,maxL,minS,maxS,Tag,ZAnf,ZEnd,callback) {
-    connection.query('Call erstelleKurs('+id+',"'+kBez+'",'+kBeschr+'",'+minL+','+MmxL+','+minS+','+maxS+',"'+Tag+'","'+ZAnf+'","'+ZEnd+'")', function(err,rows,fields){
+    connection.query('Call erstelleKurs(?,"?","?",?,?,?,?,"?","?","?")',id,kBez,kBeschr,minL,maxL,minS,maxS,Tag,ZAnf,ZEnd, function(err,rows,fields){
         if(err) throw err;
 
         return callback(rows,err);
@@ -33,7 +33,7 @@ exports.erstelleKursLehrer = function(email,kBez,kBeschr,minL,maxL,minS,maxS,Tag
 
 
 exports.selectKurs = function(id,email,callback){
-    connection.query('select k.kID,kBezeichnung,kBeschreibung,minSchueler,maxSchueler,Tag,time_format(ZeitAnfang,\'%H:%i\') as ZeitAnfang,time_format(ZeitEnde,\'%H:%i\') as ZeitEnde,s.sEmail,tdatum,twochentag,tid from kurse k left join kurse_wann kw using(kID) left join schueler_hat_kurse s using(kID) left join tage t on kw.Tag = t.tid where s.sEmail = "'+email+'" and k.kID = "'+id+'"',function (err,rows) {
+    connection.query('select k.kID,kBezeichnung,kBeschreibung,minSchueler,maxSchueler,Tag,time_format(ZeitAnfang,\'%H:%i\') as ZeitAnfang,time_format(ZeitEnde,\'%H:%i\') as ZeitEnde,s.sEmail,tdatum,twochentag,tid from kurse k left join kurse_wann kw using(kID) left join schueler_hat_kurse s using(kID) left join tage t on kw.Tag = t.tid where s.sEmail = "?" and k.kID = "?"',email,id,function (err,rows) {
         if(err) throw err;
 
         return callback(rows,err);
@@ -41,7 +41,7 @@ exports.selectKurs = function(id,email,callback){
 };
 
 exports.selectAngeboteneKurse = function(email,callback){
-    connection.query('select k.kID,kBezeichnung,kBeschreibung,minSchueler,maxSchueler,Tag,time_format(ZeitAnfang,\'%H:%i\') as ZeitAnfang,time_format(ZeitEnde,\'%H:%i\') as ZeitEnde,s.sEmail,date_format(tdatum,\'%d.%m.%y\'),twochentag,tid from kurse k left join kurse_wann kw using(kID) left join schueler_hat_kurse s using(kID) left join tage t on kw.Tag = t.tid where kID != all (select kID from schueler_hat_kurse where sEmail="'+email+'") and k.deleted != 1 ', function(err, rows, fields){
+    connection.query('select k.kID,kBezeichnung,kBeschreibung,minSchueler,maxSchueler,Tag,time_format(ZeitAnfang,\'%H:%i\') as ZeitAnfang,time_format(ZeitEnde,\'%H:%i\') as ZeitEnde,s.sEmail,date_format(tdatum,\'%d.%m.%y\'),twochentag,tid from kurse k left join kurse_wann kw using(kID) left join schueler_hat_kurse s using(kID) left join tage t on kw.Tag = t.tid where kID != all (select kID from schueler_hat_kurse where sEmail="?") and k.deleted != 1 ',email, function(err, rows, fields){
         if(err) throw err;
 
         return callback(rows);
@@ -49,7 +49,7 @@ exports.selectAngeboteneKurse = function(email,callback){
 };
 
 exports.selectKurseLehrer = function(email,callback) {
-        connection.query('select * from lehrer_macht_kurse join kurse using(kID) where lEmail="'+email+'" and kurse.deleted!=1', function (err, rows, fields) {
+        connection.query('select * from lehrer_macht_kurse join kurse using(kID) where lEmail="?" and kurse.deleted!=1',email, function (err, rows, fields) {
             if (err) throw err;
 
             return callback(rows);
@@ -57,7 +57,7 @@ exports.selectKurseLehrer = function(email,callback) {
 };
 
 exports.selectAngeboteneKurseLehrer = function(email,callback){
-    connection.query('select k.kID, kBezeichnung, kBeschreibung, minSchueler, maxSchueler, Tag, time_format(ZeitAnfang,\'%H:%i\') as ZeitAnfang, time_format(ZeitEnde,\'%H:%i\') as ZeitEnde ,s.lEmail, date_format(tdatum,\'%d.%m.%y\'), twochentag, tid from kurse k left join kurse_wann kw using(kID) left join lehrer_macht_kurse s using(kID) left join tage t on kw.Tag = t.tid where kID != all (select kID from lehrer_macht_kurse where lEmail="'+email+'") and k.deleted != 1', function(err, rows, fields){
+    connection.query('select k.kID, kBezeichnung, kBeschreibung, minSchueler, maxSchueler, Tag, time_format(ZeitAnfang,\'%H:%i\') as ZeitAnfang, time_format(ZeitEnde,\'%H:%i\') as ZeitEnde ,s.lEmail, date_format(tdatum,\'%d.%m.%y\'), twochentag, tid from kurse k left join kurse_wann kw using(kID) left join lehrer_macht_kurse s using(kID) left join tage t on kw.Tag = t.tid where kID != all (select kID from lehrer_macht_kurse where lEmail="?") and k.deleted != 1',email, function(err, rows, fields){
         if(err) throw err;
 
         return callback(rows);
@@ -70,7 +70,7 @@ exports.selectAngeboteneKurseLehrer = function(email,callback){
 // time_format(kEndZeit,\'%H:%i\')
 
 exports.selectKurseSchueler = function(email,callback) {
-    connection.query('select k.kID,kBezeichnung,kBeschreibung,minSchueler,maxSchueler,Tag,time_format(ZeitAnfang,\'%H:%i\') as ZeitAnfang,time_format(ZeitEnde,\'%H:%i\') as ZeitEnde,s.sEmail,date_format(tdatum,\'%d.%m.%y\'),twochentag,tid from kurse k left join kurse_wann kw using(kID) left join schueler_hat_kurse s using(kID) left join tage t on kw.Tag = t.tid where s.sEmail = "'+email+'" and k.deleted != 1 ', function (err, rows, fields) {
+    connection.query('select k.kID,kBezeichnung,kBeschreibung,minSchueler,maxSchueler,Tag,time_format(ZeitAnfang,\'%H:%i\') as ZeitAnfang,time_format(ZeitEnde,\'%H:%i\') as ZeitEnde,s.sEmail,date_format(tdatum,\'%d.%m.%y\'),twochentag,tid from kurse k left join kurse_wann kw using(kID) left join schueler_hat_kurse s using(kID) left join tage t on kw.Tag = t.tid where s.sEmail = "?" and k.deleted != 1 ',email, function (err, rows, fields) {
         if (err) throw err;
 
         return callback(rows);
@@ -94,7 +94,7 @@ exports.dateReset = function(callback){
 };
 
 exports.firstLogin = function (email, vname, nname, callback) {
-    connection.query('INSERT INTO schueler (sEmail, sVorname, sNachname, sKlasse, deleted) SELECT * FROM (SELECT "'+email+'","'+vname+'", "'+nname+'", '+'NULL'+', 0) AS tmp WHERE NOT EXISTS (SELECT sEmail FROM schueler WHERE sEmail = "'+email+'") LIMIT 1;', function(err, rows, fields){
+    connection.query('INSERT INTO schueler (sEmail, sVorname, sNachname, sKlasse, deleted) SELECT * FROM (SELECT "?","?", "?", '+'NULL'+', 0) AS tmp WHERE NOT EXISTS (SELECT sEmail FROM schueler WHERE sEmail = "?") LIMIT 1;',email,vname,nname,email, function(err, rows, fields){
         if(err) throw err;
 
         return callback();
@@ -102,7 +102,7 @@ exports.firstLogin = function (email, vname, nname, callback) {
 };
 
 exports.firstLoginLehrer = function (email, vname, nname, callback) {
-    connection.query('INSERT INTO lehrer (lEmail, lVorname, lNachname, deleted) SELECT * FROM (SELECT "'+email+'","'+vname+'", "'+nname+'", 0) AS tmp WHERE NOT EXISTS (SELECT lEmail FROM lehrer WHERE lEmail = "'+email+'") LIMIT 1;', function(err, rows, fields){
+    connection.query('INSERT INTO lehrer (lEmail, lVorname, lNachname, deleted) SELECT * FROM (SELECT "?","?", "?", 0) AS tmp WHERE NOT EXISTS (SELECT lEmail FROM lehrer WHERE lEmail = "?") LIMIT 1;',email,vname,nname,email, function(err, rows, fields){
         if(err) throw err;
 
         return callback();
@@ -110,7 +110,7 @@ exports.firstLoginLehrer = function (email, vname, nname, callback) {
 };
 
 exports.setWoche = function (startDatum, endDatum, callback){
-    connection.query('call ProjektWochenInsert(\''+startDatum+'\',\''+endDatum+'\')', function (err, rows, fields) {
+    connection.query('call ProjektWochenInsert(\'?\',\'?\')',startDatum,endDatum, function (err, rows, fields) {
         if(err) throw err;
 
         return callback();
@@ -119,6 +119,14 @@ exports.setWoche = function (startDatum, endDatum, callback){
 
 exports.selectProjektWoche = function (callback){
     connection.query('call selectWocheVonBis()', function (err, rows, fields) {
+        if(err) throw err;
+
+        return callback(rows);
+    });
+};
+
+exports.schuelertraegtfuerkursein = function (schuelermail,kursid,callback){
+    connection.query('INSERT INTO `schueler_hat_kurse`(`sEmail`, `kID`) VALUES (?,?)',schuelermail,kursid, function (err, rows, fields) {
         if(err) throw err;
 
         return callback(rows);
